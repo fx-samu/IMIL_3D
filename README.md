@@ -2,7 +2,7 @@
 
 > _A Python framework for converting single 2D images into textured 3D mesh reconstructions._
 
-Welcome to 3D IMIL a lab created in collaboration by undergrad Samuel Chavez F. in supervision by PhD. Nelson Baloian and inspired and direction of MSc. Cristian Llull.
+Welcome to 3D IMIL a lab created by B.Sc. Candidate Samuel Chavez F. in under supervision by PhD. Nelson Baloian and inspired and direction of PhD. Student Cristian Llull, FCFM, Universidad de Chile.
 
 The module lab presents the foundations of working with single images in Python to streamline the process of interpreting a static image and infere depth to recreate good fidelity 3D estimations of the object using different methods initially in the scope of culture presevation and digitalization of Khachkars
 
