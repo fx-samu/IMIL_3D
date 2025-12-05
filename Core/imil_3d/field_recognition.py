@@ -284,7 +284,7 @@ def best_line_hough(img_arr: ImageLikeArray) -> NDArray[Shape["Thetha, Rho"], np
     hspace, theta, d = ski.transform.hough_line(img_arr, theta=tested_angles)
     _, angles, dists    = ski.transform.hough_line_peaks(hspace, theta, d, num_peaks=1)
     
-    return np.float([angles, dists], dtype=np.float32)
+    return np.array([angles, dists], dtype=np.float32)
 
 def best_wh_quad(corners: ListPoint2D) -> (float, float):
     """Given 4 points in the plane returns minimal width height as if it were to be a rectangle
