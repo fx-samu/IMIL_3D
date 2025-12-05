@@ -469,18 +469,18 @@ def solidify_mesh_box(mesh: Trimesh, height: float) -> Trimesh:
 
     all_faces = np.vstack([top_faces, bottom_faces, side_faces])
     
-    # DEBUG: Verify vertex separation
-    print(f"\n[DEBUG solidify_mesh_box]")
-    print(f"  n_top_verts: {n_verts}")
-    print(f"  n_boundary_verts: {len(boundary_vert_indices)}")
-    print(f"  n_boundary_edges: {n_boundary_edges}")
-    print(f"  Total vertices: {len(all_verts)} (expected: {2*n_verts + len(boundary_vert_indices)})")
-    print(f"  Vertex ranges: top[0:{n_verts}], bottom[{n_verts}:{2*n_verts}], dup[{2*n_verts}:{len(all_verts)}]")
-    print(f"  Side face vertex indices range: [{side_faces.min()}, {side_faces.max()}]")
-    print(f"  Side faces using top range [0,{n_verts})? {(side_faces < n_verts).any()}")
-    if (side_faces < n_verts).any():
-        bad_indices = side_faces[side_faces < n_verts]
-        print(f"  !!! PROBLEM: Side faces reference original top vertices: {np.unique(bad_indices)[:10]}...")
+    # # DEBUG: Verify vertex separation
+    # print(f"\n[DEBUG solidify_mesh_box]")
+    # print(f"  n_top_verts: {n_verts}")
+    # print(f"  n_boundary_verts: {len(boundary_vert_indices)}")
+    # print(f"  n_boundary_edges: {n_boundary_edges}")
+    # print(f"  Total vertices: {len(all_verts)} (expected: {2*n_verts + len(boundary_vert_indices)})")
+    # print(f"  Vertex ranges: top[0:{n_verts}], bottom[{n_verts}:{2*n_verts}], dup[{2*n_verts}:{len(all_verts)}]")
+    # print(f"  Side face vertex indices range: [{side_faces.min()}, {side_faces.max()}]")
+    # print(f"  Side faces using top range [0,{n_verts})? {(side_faces < n_verts).any()}")
+    # if (side_faces < n_verts).any():
+    #     bad_indices = side_faces[side_faces < n_verts]
+    #     print(f"  !!! PROBLEM: Side faces reference original top vertices: {np.unique(bad_indices)[:10]}...")
 
     solid = trimesh.Trimesh(vertices=all_verts, faces=all_faces, process=False)
     return solid
@@ -556,15 +556,15 @@ def apply_texture_to_solid(mesh: Trimesh, inp_image: ImageLikeArray,
     # Flip V coordinate (image y=0 is top, UV v=0 is bottom)
     uv[:, 1] = 1.0 - uv[:, 1]
     
-    # DEBUG: Verify UV assignments
-    print(f"\n[DEBUG apply_texture_to_solid]")
-    print(f"  n_top_verts (detected): {n_top_verts}")
-    print(f"  n_total_verts: {n_total_verts}")
-    print(f"  Atlas size: {atlas_width}x{height}, texture region: [0,{width}], solid region: [{width},{atlas_width}]")
-    print(f"  solid_u: {solid_u:.4f} (should be > {width/atlas_width:.4f})")
-    print(f"  Top verts UV u range: [{uv[:n_top_verts, 0].min():.4f}, {uv[:n_top_verts, 0].max():.4f}]")
-    print(f"  Top verts UV v range: [{uv[:n_top_verts, 1].min():.4f}, {uv[:n_top_verts, 1].max():.4f}]")
-    print(f"  Non-top verts UV u (all should be {solid_u:.4f}): unique={np.unique(uv[n_top_verts:, 0])}")
+    # # DEBUG: Verify UV assignments
+    # print(f"\n[DEBUG apply_texture_to_solid]")
+    # print(f"  n_top_verts (detected): {n_top_verts}")
+    # print(f"  n_total_verts: {n_total_verts}")
+    # print(f"  Atlas size: {atlas_width}x{height}, texture region: [0,{width}], solid region: [{width},{atlas_width}]")
+    # print(f"  solid_u: {solid_u:.4f} (should be > {width/atlas_width:.4f})")
+    # print(f"  Top verts UV u range: [{uv[:n_top_verts, 0].min():.4f}, {uv[:n_top_verts, 0].max():.4f}]")
+    # print(f"  Top verts UV v range: [{uv[:n_top_verts, 1].min():.4f}, {uv[:n_top_verts, 1].max():.4f}]")
+    # print(f"  Non-top verts UV u (all should be {solid_u:.4f}): unique={np.unique(uv[n_top_verts:, 0])}")
     
     # Check if any top vertex UVs are outside texture region
     top_u_max = width / atlas_width
