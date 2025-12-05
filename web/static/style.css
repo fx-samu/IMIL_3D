@@ -1,0 +1,284 @@
+/* IMIL-3D Web Interface */
+:root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface-2: #252525;
+    --border: #333;
+    --text: #e0e0e0;
+    --text-muted: #888;
+    --accent: #4a9eff;
+    --accent-hover: #6bb3ff;
+    --success: #4caf50;
+    --error: #f44336;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+header {
+    text-align: center;
+    padding: 2rem 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+}
+
+header p {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
+
+.step h2 {
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+}
+
+/* Upload Area */
+.upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 4rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-area:hover {
+    border-color: var(--accent);
+    background: var(--surface);
+}
+
+.upload-area p {
+    color: var(--text-muted);
+}
+
+/* Canvas Container */
+#canvas-container {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+#image-canvas {
+    max-width: 100%;
+    max-height: 500px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: crosshair;
+}
+
+.hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.controls label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.controls input[type="number"] {
+    width: 80px;
+    padding: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: inherit;
+}
+
+button, .button {
+    padding: 0.75rem 1.5rem;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+button:hover:not(:disabled), .button:hover {
+    background: var(--accent-hover);
+}
+
+button:disabled {
+    background: var(--surface-2);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+#back-btn {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+#back-btn:hover {
+    background: var(--border);
+}
+
+/* Results Grid */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.result-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.result-card h3 {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.result-card img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 4px;
+    background: var(--bg);
+}
+
+.result-card.selectable {
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.result-card.selectable:hover {
+    border-color: var(--accent);
+}
+
+.result-card.selected {
+    border-color: var(--accent);
+    background: var(--surface-2);
+}
+
+.result-card .status {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.result-card.error {
+    opacity: 0.5;
+}
+
+.result-card.error .status {
+    color: var(--error);
+}
+
+/* Model Viewer */
+model-viewer {
+    width: 100%;
+    height: 500px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+/* Loading Overlay */
+#loading {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+#loading-text {
+    color: var(--text-muted);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    model-viewer {
+        height: 350px;
+    }
+}
+

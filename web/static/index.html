@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMIL-3D | Image to 3D Mesh</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>IMIL-3D</h1>
+        <p>Image Manipulation Interpretation Lab — 2D to 3D Mesh Reconstruction</p>
+    </header>
+
+    <main>
+        <!-- Step 1: Upload and Select Region -->
+        <section id="step-upload" class="step active">
+            <h2>1. Upload Image & Select Region</h2>
+            
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="image-input" accept="image/*" hidden>
+                <p>Click or drag image here</p>
+            </div>
+
+            <div id="canvas-container" class="hidden">
+                <canvas id="image-canvas"></canvas>
+                <p class="hint">Click and drag to draw bounding box around the object</p>
+            </div>
+
+            <div class="controls">
+                <label>
+                    Resolution (MP):
+                    <input type="number" id="megapixels" value="0.5" min="0.1" max="5" step="0.1">
+                </label>
+                <button id="process-btn" disabled>Process Image</button>
+            </div>
+        </section>
+
+        <!-- Step 2: Review Results and Select Corner Method -->
+        <section id="step-corners" class="step hidden">
+            <h2>2. Select Corner Detection Method</h2>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <h3>Mask Result</h3>
+                    <img id="mask-preview" alt="Segmentation mask">
+                </div>
+                
+                <div class="result-card selectable" data-method="rect">
+                    <h3>Min Area Rectangle</h3>
+                    <img id="corners-rect" alt="Rectangle corners">
+                    <span class="status"></span>
+                </div>
+                
+                <div class="result-card selectable" data-method="hough">
+                    <h3>Hough Lines</h3>
+                    <img id="corners-hough" alt="Hough corners">
+                    <span class="status"></span>
+                </div>
+                
+                <div class="result-card selectable" data-method="rdp">
+                    <h3>RDP Algorithm</h3>
+                    <img id="corners-rdp" alt="RDP corners">
+                    <span class="status"></span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="back-btn">← Back</button>
+                <button id="generate-btn" disabled>Generate 3D Model</button>
+            </div>
+        </section>
+
+        <!-- Step 3: View 3D Model -->
+        <section id="step-viewer" class="step hidden">
+            <h2>3. 3D Model Result</h2>
+            
+            <model-viewer 
+                id="model-viewer"
+                alt="Generated 3D model"
+                camera-controls
+                touch-action="pan-y"
+                auto-rotate
+                shadow-intensity="1"
+                exposure="5"
+                environment-image="neutral"
+            ></model-viewer>
+
+            <div class="controls">
+                <button id="restart-btn">Start Over</button>
+                <a id="download-btn" class="button" download="model.glb">Download GLB</a>
+            </div>
+        </section>
+
+        <!-- Loading Overlay -->
+        <div id="loading" class="hidden">
+            <div class="spinner"></div>
+            <p id="loading-text">Processing...</p>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
