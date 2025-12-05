@@ -1,9 +1,9 @@
 import numpy as np
 from nptyping import NDArray, Shape
 import cv2
-from utils.field_recognition import best_wh_quad, map_corners
-from utils.imiltyping import *
-from utils.functions import image_from_imagearr
+from imil_3d.field_recognition import best_wh_quad, map_corners
+from imil_3d.imiltyping import *
+from imil_3d.functions import image_from_imagearr
 
 def image_resize(img_arr: ImageLikeArray, mp: float = 2.5) -> ImageLikeArray:
     """

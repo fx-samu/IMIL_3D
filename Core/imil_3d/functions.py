@@ -1,6 +1,6 @@
 from PIL import Image
 from typing import Callable
-from utils.imiltyping import *
+from imil_3d.imiltyping import *
 import numpy as np
 import functools
 import time

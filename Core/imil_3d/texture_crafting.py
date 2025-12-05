@@ -2,7 +2,7 @@ from PIL import Image
 import cv2
 import numpy as np
 
-from utils.imiltyping import *
+from imil_3d.imiltyping import *
 
 
 def naive_texture(img_arr: ImageLikeArray) -> ImageLikeArray:

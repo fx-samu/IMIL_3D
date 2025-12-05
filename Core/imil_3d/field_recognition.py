@@ -1,7 +1,7 @@
 # from a raw image to detection of the actual object
 from nptyping import Floating
-from utils.imiltyping import * 
-from utils.functions import gpu_benchmark
+from imil_3d.imiltyping import * 
+from imil_3d.functions import gpu_benchmark
 
 from segment_anything import SamPredictor, sam_model_registry
 from sam2.build_sam import build_sam2

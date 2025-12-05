@@ -1,7 +1,7 @@
 from PIL.ImageOps import grayscale as pil_grayscale
 from PIL.ImageOps import autocontrast as pil_autocontrast
-from utils.functions import image_from_imagearr, imagearr_from_image
-from utils.imiltyping import * 
+from imil_3d.functions import image_from_imagearr, imagearr_from_image
+from imil_3d.imiltyping import * 
 import numpy as np
 
 def grayscale(input_image: ImageLikeArray) -> NumberField2D:
