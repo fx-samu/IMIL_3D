@@ -399,12 +399,13 @@ def extrude_mesh(mesh: Trimesh, direction: list = [0, 0, -1],
     
     return solid
 
-def solidify_mesh_box(mesh: Trimesh, height: float) -> Trimesh:
+def solidify_mesh_box(mesh: Trimesh, height: float, flatten_boundary: bool = True) -> Trimesh:
     """Creates a solid box by extruding mesh downward with flat bottom
     
     Args:
         mesh (Trimesh): Input surface mesh (typically from mesh_hmap)
         height (float): Extrusion depth below the mesh's minimum Z
+        flatten_boundary (bool): If True, flatten boundary vertices to min_z for clean edges
     
     Returns:
         Trimesh: Watertight solid with top surface, flat bottom, and closed sides.
@@ -416,8 +417,6 @@ def solidify_mesh_box(mesh: Trimesh, height: float) -> Trimesh:
     top_verts = mesh.vertices.copy()
     min_z = np.min(top_verts[:, 2])
     bottom_z = min_z - height
-    bottom_verts = top_verts.copy()
-    bottom_verts[:, 2] = bottom_z
     n_verts = len(top_verts)
 
     # 2. Top faces: use mesh.faces (same indices)
@@ -435,9 +434,17 @@ def solidify_mesh_box(mesh: Trimesh, height: float) -> Trimesh:
     boundary_edges = edges[is_boundary]
     n_boundary_edges = len(boundary_edges)
 
+    # 4.5. Flatten boundary vertices to min_z for clean frame edges
+    boundary_vert_indices = np.unique(boundary_edges.flatten())
+    if flatten_boundary:
+        top_verts[boundary_vert_indices, 2] = min_z
+    
+    # Create bottom vertices after boundary flattening
+    bottom_verts = top_verts.copy()
+    bottom_verts[:, 2] = bottom_z
+
     # 5. Create duplicated boundary vertices for side faces (UV separation)
     # Get unique boundary vertex indices and create mapping to new indices
-    boundary_vert_indices = np.unique(boundary_edges.flatten())
     dup_base_idx = 2 * n_verts  # Duplicates start after top+bottom
     
     # Map original vertex index -> duplicated vertex index
@@ -487,7 +494,8 @@ def solidify_mesh_box(mesh: Trimesh, height: float) -> Trimesh:
 
 
 def apply_texture_to_solid(mesh: Trimesh, inp_image: ImageLikeArray, 
-                           mean_color: NumerPoint3D, flip_x: bool = True) -> Trimesh:
+                           mean_color: NumerPoint3D, flip_x: bool = True,
+                           frame_boundary: bool = True) -> Trimesh:
     """Applies a texture to a solidified mesh with UV mapping
     
     Args:
@@ -495,6 +503,7 @@ def apply_texture_to_solid(mesh: Trimesh, inp_image: ImageLikeArray,
         inp_image (ImageLikeArray): Texture image (grayscale, RGB, or RGBA)
         mean_color (np.ndarray): RGB color [r,g,b] for side and bottom faces
         flip_x (bool, optional): Flip texture horizontally to match mesh_hmap. Defaults to True.
+        frame_boundary (bool, optional): If True, boundary vertices get solid color (frame effect). Defaults to True.
     
     Returns:
         Trimesh: New mesh with TextureVisuals applied
@@ -507,10 +516,15 @@ def apply_texture_to_solid(mesh: Trimesh, inp_image: ImageLikeArray,
     
     # Derive n_top_verts from mesh geometry
     # solidify_mesh_box layout: [top, bottom, duplicated_boundary]
-    # Bottom vertices are at min_z, count them to determine n_top_verts
-    min_z = mesh.vertices[:, 2].min()
-    is_bottom = np.isclose(mesh.vertices[:, 2], min_z)
+    # Bottom vertices are at the absolute min_z
+    absolute_min_z = mesh.vertices[:, 2].min()
+    is_bottom = np.isclose(mesh.vertices[:, 2], absolute_min_z)
     n_top_verts = is_bottom.sum()  # bottom count == top count
+    
+    # Get top vertices and find boundary (flattened to top's min_z)
+    top_verts = mesh.vertices[:n_top_verts]
+    top_min_z = top_verts[:, 2].min()
+    is_boundary_top = np.isclose(top_verts[:, 2], top_min_z)
     
     # Mesh x ranges [0, width_ratio], y ranges [0, 1]
     width_ratio = mesh.vertices[:, 0].max()
@@ -543,10 +557,14 @@ def apply_texture_to_solid(mesh: Trimesh, inp_image: ImageLikeArray,
     uv = np.zeros((n_total_verts, 2), dtype=np.float64)
     
     # Top vertices (0 to n_top_verts-1): map x,y to u,v in main texture region
-    top_verts = mesh.vertices[:n_top_verts]
     u_scale = width / atlas_width
     uv[:n_top_verts, 0] = (top_verts[:, 0] / width_ratio) * u_scale
     uv[:n_top_verts, 1] = top_verts[:, 1]  # y is already [0, 1]
+    
+    # If frame_boundary, assign boundary top vertices solid color UVs
+    if frame_boundary:
+        uv[:n_top_verts][is_boundary_top, 0] = solid_u
+        uv[:n_top_verts][is_boundary_top, 1] = solid_v
     
     # ALL other vertices (bottom + duplicated boundary): solid color UV
     # This includes [n_top_verts:2*n_top_verts] (bottom) and [2*n_top_verts:] (side dups)

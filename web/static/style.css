@@ -1,15 +1,16 @@
 /* IMIL-3D Web Interface */
 :root {
-    --bg: #0f0f0f;
-    --surface: #1a1a1a;
-    --surface-2: #252525;
-    --border: #333;
-    --text: #e0e0e0;
-    --text-muted: #888;
-    --accent: #4a9eff;
-    --accent-hover: #6bb3ff;
-    --success: #4caf50;
-    --error: #f44336;
+    /* Warm charcoal + UChile red palette */
+    --bg: #231F20;
+    --surface: #2e2a2b;
+    --surface-2: #3a3536;
+    --border: #4d4748;
+    --text: #f5f2f0;
+    --text-muted: #a8a4a2;
+    --accent: #ED1C24;
+    --accent-hover: #ff4049;
+    --success: #5cb85c;
+    --error: #ED1C24;
 }
 
 * {
