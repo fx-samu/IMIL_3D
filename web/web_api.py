@@ -251,7 +251,11 @@ async def serve_css():
 
 @app.get("/app.js")
 async def serve_js():
-    return FileResponse(os.path.join(static_dir, 'app.js'), media_type='application/javascript')
+    return FileResponse(
+        os.path.join(static_dir, 'app.js'),
+        media_type='application/javascript',
+        headers={"Cache-Control": "no-cache, no-store, must-revalidate"}
+    )
 
 
 if __name__ == "__main__":

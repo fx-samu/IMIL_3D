@@ -19,6 +19,8 @@ const ctx = canvas.getContext('2d');
 const megapixelsInput = document.getElementById('megapixels');
 const processBtn = document.getElementById('process-btn');
 const generateBtn = document.getElementById('generate-btn');
+const depthScaleInput = document.getElementById('depth-scale');
+const boxDepthInput = document.getElementById('box-depth');
 const backBtn = document.getElementById('back-btn');
 const restartBtn = document.getElementById('restart-btn');
 const downloadBtn = document.getElementById('download-btn');
@@ -283,14 +285,17 @@ generateBtn.addEventListener('click', async () => {
     showLoading('Generating 3D mesh...');
     
     try {
+        const depthScale = parseFloat(depthScaleInput.value);
+        const boxDepth = parseFloat(boxDepthInput.value);
+        
         const response = await fetch('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 session_id: sessionId,
                 corner_method: selectedMethod,
-                depth_scale: 0.05,
-                box_depth: 0.1
+                depth_scale: depthScale,
+                box_depth: boxDepth
             })
         });
         
