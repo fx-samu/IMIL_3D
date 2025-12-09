@@ -586,8 +586,8 @@ def apply_texture_to_solid(mesh: Trimesh, inp_image: ImageLikeArray,
     
     # Check if any top vertex UVs are outside texture region
     top_u_max = width / atlas_width
-    if (uv[:n_top_verts, 0] > top_u_max).any():
-        print(f"  !!! PROBLEM: Some top vertex UVs exceed texture region ({top_u_max:.4f})")
+    # if (uv[:n_top_verts, 0] > top_u_max).any():
+    #     print(f"  !!! PROBLEM: Some top vertex UVs exceed texture region ({top_u_max:.4f})")
     
     # Create PIL Image for trimesh
     pil_mode = 'RGBA' if n_channels == 4 else 'RGB'
